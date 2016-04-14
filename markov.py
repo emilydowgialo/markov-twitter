@@ -4,17 +4,6 @@ import sys
 from random import choice
 import twitter
 
-api = twitter.Api(
-    consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
-    consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
-    access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
-    access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
-
-print api.VerifyCredentials()
-
-status = api.PostUpdate("Ada's here!")
-print status.text
-
 def open_and_read_file(filenames):
     """Given a list of files, open them, read the text, and return one long
         string."""
@@ -54,7 +43,11 @@ def make_chains(text_string):
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
+
+    #count = 0
+
     key = choice(chains.keys())
+    tweet = ""
     words = [key[0], key[1]]
     while key in chains:
         # Keep looping until we have a key that isn't in the chains
@@ -65,9 +58,22 @@ def make_text(chains):
 
         word = choice(chains[key])
         words.append(word)
+
+        # for word in words:
+        #     if word.count == 140:
+        #         count += 1
+        #     else:
+        #         break 
+
+
         key = (key[1], word)
 
-    return " ".join(words)
+        tweet = tweet + " ".join(words)
+
+        if len(tweet) > 140:
+            break
+
+    return tweet
 
 
 def tweet(chains):
@@ -88,3 +94,14 @@ chains = make_chains(text)
 
 # Your task is to write a new function tweet, that will take chains as input
 # tweet(chains)
+
+api = twitter.Api(
+    consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+    consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+    access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
+    access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
+
+print api.VerifyCredentials()
+
+status = api.PostUpdate("Ada is awesome dghasdg askjdgjsagdjh askjdgjhgasdjh askdghjhjhgasd kasdgajsghdj asjgdjagsdjgaj askdjgajsgg sagdahgd asdghadhgf asdjgasdg a sdjgajsd askdyajsgd amsgduyasgsdkasgdy")
+print status.text
